@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public class EnemyConfig
+[CreateAssetMenu(fileName = "EnemyConfig", menuName = "EnemyConfigs/EnemyConfig")]
+public class EnemyConfig: ScriptableObject
 {
     [SerializeField] private Enemy _prefab;
     [SerializeField, Range(1, 10)] private int _health;

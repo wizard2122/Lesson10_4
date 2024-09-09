@@ -1,15 +1,30 @@
 using System;
+using System.IO;
 using UnityEngine;
+using Zenject;
 
-[CreateAssetMenu(fileName = "EnemyFactory", menuName = "Factory/EnemyFactory")]
-public class EnemyFactory : ScriptableObject
+public class EnemyFactory
 {
-    [SerializeField] private EnemyConfig _small, _medium, _large;
+    private const string SmallConfig = "SmallConfig";
+    private const string MediumConfig = "MediumConfig";
+    private const string LargeConfig = "LargeConfig";
+
+    private const string ConfigsPath = "EnemyConfigs";
+
+    private EnemyConfig _small, _medium, _large;
+
+    private IInstantiator _container;
+
+    public EnemyFactory(IInstantiator container)
+    {
+        _container = container;
+        Load();
+    }
 
     public Enemy Get(EnemyType enemyType)
     {
         EnemyConfig config = GetConfig(enemyType);
-        Enemy instance = Instantiate(config.Prefab);
+        Enemy instance = _container.InstantiatePrefabForComponent<Enemy>(config.Prefab);
         instance.Initialize(config.Health, config.Speed);
         return instance;
     }
@@ -30,5 +45,12 @@ public class EnemyFactory : ScriptableObject
             default:
                 throw new ArgumentException(nameof(enemyType));
         }
+    }
+
+    private void Load()
+    {
+        _small = Resources.Load<EnemyConfig>(Path.Combine(ConfigsPath, SmallConfig));
+        _medium = Resources.Load<EnemyConfig>(Path.Combine(ConfigsPath, MediumConfig));
+        _large = Resources.Load<EnemyConfig>(Path.Combine(ConfigsPath, LargeConfig));
     }
 }

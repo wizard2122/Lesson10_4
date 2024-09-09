@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -9,9 +10,15 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] private List<Transform> _spawnPoints;
 
-    [SerializeField] private EnemyFactory _enemyFactory;
+    private EnemyFactory _enemyFactory;
 
     private Coroutine _spawn;
+
+    [Inject]
+    private void Construct(EnemyFactory enemyFactory)
+    {
+        _enemyFactory = enemyFactory;
+    }
 
     public void StartWork()
     {
