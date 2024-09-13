@@ -8,11 +8,14 @@ public class GameplayHUD : MonoBehaviour
 
     private SceneLoadMediator _sceneLoader;
 
+    private Wallet _wallet;
+
     [Inject]
-    private void Construct(SceneLoadMediator sceneLoader, LevelLoadingData levelLoadingData)
+    private void Construct(SceneLoadMediator sceneLoader, LevelLoadingData levelLoadingData, Wallet wallet)
     {
         _sceneLoader = sceneLoader;
         Debug.Log(levelLoadingData.Level);
+        _wallet = wallet;   
     }
 
     private void OnEnable()
@@ -24,5 +27,15 @@ public class GameplayHUD : MonoBehaviour
     private void OnMainMenuClick()
     {
         _sceneLoader.GoToMainMenu();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            _wallet.Add(10);
+
+        if(Input.GetKeyDown(KeyCode.F))
+            if(_wallet.IsEnough(10))
+                _wallet.Spend(10);
     }
 }

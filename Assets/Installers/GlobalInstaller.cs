@@ -4,10 +4,31 @@ using Zenject;
 
 public class GlobalInstaller : MonoInstaller
 {
+    private const string CoroutinePerformerPath = "CoroutinePerformer";
+
     public override void InstallBindings()
     {
         BindInput();
         BindLoader();
+        BindWallet();
+        BindCoroutinePerformer();
+    }
+
+    private void BindCoroutinePerformer()
+    {
+        Container
+            .Bind<ICoroutinePerformer>()
+            .To<CoroutinePerformer>()
+            .FromComponentInNewPrefabResource(CoroutinePerformerPath)
+            .AsSingle()
+            .NonLazy();
+    }
+
+    private void BindWallet()
+    {
+        //Wallet wallet = new Wallet(1000);
+        //Container.BindInstance(wallet).AsSingle();
+        Container.BindInterfacesAndSelfTo<Wallet>().AsSingle().WithArguments(1000);
     }
 
     private void BindLoader()
